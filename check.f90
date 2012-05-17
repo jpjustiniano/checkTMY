@@ -7,6 +7,8 @@ Program CheckTMY23
 implicit none 
 
 INTEGER :: n=1, ierror, errorh, sel=1
+CHARACTER(len=70) 	:: argument
+CHARACTER(len=4) 	:: xxx
 
 !TMY2  Head
  CHARACTER (LEN=5) :: WBAN 
@@ -30,11 +32,10 @@ INTEGER :: n=1, ierror, errorh, sel=1
    INTEGER :: barounc,wdir, wdirunc, wspd, wspdunc, visi,visiunc,chgt,chgtunc,pwat,pwatunc,aod
    INTEGER :: aodunc,sndp,sndpunc,dsls,dslsunc
 				
-!TMY3  Head				 	
+!TMY3  Head
  CHARACTER (LEN=30) :: name
  REAL :: tz3, latitude3, longitude3
  INTEGER ::  USAF, elevation3
-
 
 !TMY3  Body
  CHARACTER (LEN=10) :: date, yyyyddmm
@@ -53,10 +54,27 @@ INTEGER :: n=1, ierror, errorh, sel=1
 1003 FORMAT ( A4,A2,A2,A5,I2,I2,24I4,A1,2I1,2(A1,I1,F3.1),A1,2I2,A1,I1,I4,A1,I1,I3,A1,I1,F4.1,A1,I1,I4,A1,I1,I5,A1,I1,F5.1,&
 				 &2(A1,I1,F5.3),A1,I1,2I3,A1,I1)  !Body
 
+call get_command_argument(1, argument)
 
+write (xxx,*) argument(LEN_TRIM(argument) - 2 : LEN_TRIM(argument))
+
+Select case (xxx)	!Selector de formato de archivo
+Case (' tm2', ' TM2')
+	write(*,*) ' Formato TMY2, File: ',trim(argument)
+sel=1 
+Case (' csv',' CSV')
+	write(*,*) ' Formato Comma Separate per Coma, File: ',trim(argument)
+sel=2
+Case default
 Write(*,*) ' Para verificar TMY2 "1", para verificar TMY3 "2".'
 Write(*,*) ' 1: TMY2; 2:TMY3 '
 Read (*,*) sel
+end select
+
+write (*,*) xxx
+write (*,*) argument
+write (*,*) sel
+read (*,*)
 
 If (sel==1) Then     ! ******** TMY2 ************
  
