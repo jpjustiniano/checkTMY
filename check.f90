@@ -2,7 +2,7 @@ Program CheckTMY23
 
 ! Juan Pablo Justiniano
 ! jpjustiniano@gmail.com
-! 26.06.2010 
+! 18.05.2012 
 
 implicit none 
 
@@ -71,21 +71,21 @@ Write(*,*) ' 1: TMY2; 2:TMY3 '
 Read (*,*) sel
 end select
 
+open(unit=8,file=argument)   
+
 write (*,*) xxx
 write (*,*) argument
 write (*,*) sel
 read (*,*)
 
 If (sel==1) Then     ! ******** TMY2 ************
- 
-	open(unit=2,file='23234.tm2')   
 	
-	READ(2,1022,IOSTAT=errorh)WBAN , city, state, tz, latitude,LatDeg,LatMin, longitude,LonDeg, LonMin, elevation
+	READ(8,1022,IOSTAT=errorh)WBAN , city, state, tz, latitude,LatDeg,LatMin, longitude,LonDeg, LonMin, elevation
 			Write (*,*) WBAN , city, state, tz   
 	IF (errorh/=0)  write (*,*) 'Error en lectura de encabezado.'
 
 	DO 
-	    READ (2,1002,IOSTAT=ierror) yr,mo,dy,hr,etr,etrn,glo,gloflg,glounc,dir,dirflg,dirunc,dif,difflg,difunc,gloi,gloiflg,&
+	    READ (8,1002,IOSTAT=ierror) yr,mo,dy,hr,etr,etrn,glo,gloflg,glounc,dir,dirflg,dirunc,dif,difflg,difunc,gloi,gloiflg,&
 					&gloiunc,diri,diriflg,diriunc,difi,dififlg,difiunc,zeni,zeniflg,zeniunc,tot,totflg,totunc,&
 					&opq,opqflg, opqunc,dryb,drybflg,drybunc,dewp,dewpflg,dewpunc,rhum,rhumflg,rhumunc,&
 					&baro,baroflg,barounc,wdir, wdirflg, wdirunc, wspd, wspdflg, wspdunc, visi, visiflg, visiunc,&
@@ -114,19 +114,14 @@ If (sel==1) Then     ! ******** TMY2 ************
 	  
 ElseIf (sel==2) Then   ! ******** TMY3 ************
 
-	open(unit=3,file='724940TY.csv')
-
-	READ(3,*,IOSTAT=errorh)USAF, name , state, tz3, latitude3, longitude3, elevation3
-
-	
+	READ(8,*,IOSTAT=errorh)USAF, name , state, tz3, latitude3, longitude3, elevation3
 	
 	DO 
-		    READ (3,*,IOSTAT=ierror)  di, me,ano,time, etr,etrn,glo,gloflg,glounc,dir,dirflg,dirunc,dif,difflg,difunc,&
+		READ (8,*,IOSTAT=ierror)  di, me,ano,time, etr,etrn,glo,gloflg,glounc,dir,dirflg,dirunc,dif,difflg,difunc,&
 		gloi,gloiflg,gloiunc,diri,diriflg,diriunc,difi,dififlg,difiunc,zeni,zeniflg,zeniunc,tot,totflg,totunc,&
 		opq,opqflg, opqunc,dryb,drybflg,drybunc,dewp,dewpflg,dewpunc,rhum,rhumflg,rhumunc,&
 		baro,baroflg,barounc,wdir, wdirflg, wdirunc, wspd, wspdflg, wspdunc, visi, visiflg, visiunc,&
 		chgt,chgtflg,chgtunc,prwt,pwat,pwatflg,pwatunc,aod,aodflg,aodunc,Alb,Albflg,Albunc,Lprecip,Lpreciphr,Lprecipflg,Lprecipunc 
-		
 		
 		IF (ierror==-1) then 
 			Write (*,*) 'Terminado de leer el archivo.'
@@ -136,22 +131,17 @@ ElseIf (sel==2) Then   ! ******** TMY3 ************
 		
 		Write (*,*) n, yyyyddmm, time,etr,etrn, glo, dir, dif
 		n = n + 1  		    
-		    
 
 	End do	    
 	
 Else if (sel==3)then
-open(4,file='etst.txt')
-read (4,'(3I3,I2,I2,I4)') glo, dir,yr,mo,dy
-!'10,3,12/31/1997,20:00'
+	open(9,file='etst.txt')
+	read (4,'(3I3,I2,I2,I4)') glo, dir,yr,mo,dy
+	!'10,3,12/31/1997,20:00'
 print *, glo, dir,yr,mo,dy
 
 Else 
-write(*,*) 'Error en el numero de tipo de archivo. 1: TMY2; 2:TMY3'
+	write(*,*) 'Error en el numero de tipo de archivo. 1: TMY2; 2:TMY3'
 EndIf
-100 FORMAT ( A10,A5,3I4)
-!01/04/1999,02:00,0,0,0,2,0,0,2,0,0,2,0,0,2,0,0,2,0,0,2,0,0,2,0,2,E,9,1,E,9,7.8,A,7,6.1,A,7,89,A,7,1026,A,7,0,A,7,0.0,A,7,12800,A,7,9144,A,7,1.3,E,8,0.108,F,8,0.160,F,8,0,1,A,7
-		    ! 27 30 34 37 40 43 46 49 52 55 58 61 64 68  
   	
-  
 End  Program CheckTMY23
