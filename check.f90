@@ -9,6 +9,7 @@ implicit none
 INTEGER :: n=1, ierror, errorh, sel=1
 CHARACTER(len=70) 	:: argument
 CHARACTER(len=4) 	:: xxx
+INTEGER				:: cnt, status
 
 !TMY2  Head
  CHARACTER (LEN=5) :: WBAN 
@@ -54,7 +55,16 @@ CHARACTER(len=4) 	:: xxx
 1003 FORMAT ( A4,A2,A2,A5,I2,I2,24I4,A1,2I1,2(A1,I1,F3.1),A1,2I2,A1,I1,I4,A1,I1,I3,A1,I1,F4.1,A1,I1,I4,A1,I1,I5,A1,I1,F5.1,&
 				 &2(A1,I1,F5.3),A1,I1,2I3,A1,I1)  !Body
 
-call get_command_argument(1, argument)
+cnt = command_argument_count ()
+If (cnt > 1) 
+	write (*,*) "Too many arguments..."
+	Exit
+else if (cnt==1)
+	call get_command_argument(1, argument)
+else if (cnt==0)
+	write (*,*) "File to process:"
+	read(argument)
+end if
 
 write (xxx,*) argument(LEN_TRIM(argument) - 2 : LEN_TRIM(argument))
 
